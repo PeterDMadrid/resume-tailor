@@ -13,7 +13,10 @@ use Throwable;
  */
 class GeminiService
 {
-    public function __construct(private readonly ResumeTailorPrompt $prompt) {}
+    public function __construct(
+        private readonly ResumeTailorPrompt $prompt,
+        private readonly ConstantSkills $constants,
+    ) {}
 
     public function tailor(string $jobDescription, ?string $jobTitle = null, ?string $companyName = null): TailoredContent
     {
@@ -109,9 +112,14 @@ class GeminiService
      */
     private function filterToPool(array $returned): array
     {
-        // Map lowercased skill => [group, canonical name].
+        // Map lowercased skill => [group, canonical name]. Pool + constants.
         $lookup = [];
         foreach ((array) config('resume.skill_pool') as $group => $skills) {
+            foreach ($skills as $skill) {
+                $lookup[mb_strtolower($skill)] = [$group, $skill];
+            }
+        }
+        foreach ($this->constants->grouped() as $group => $skills) {
             foreach ($skills as $skill) {
                 $lookup[mb_strtolower($skill)] = [$group, $skill];
             }

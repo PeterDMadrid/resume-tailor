@@ -54,10 +54,20 @@
                                 </span>
                             </td>
                             <td class="px-4 py-3 text-right">
-                                <a href="{{ route('tailor.download', $run) }}"
-                                   class="font-medium text-slate-900 underline decoration-slate-300 underline-offset-2 hover:decoration-slate-900">
-                                    Download
-                                </a>
+                                <div class="flex items-center justify-end gap-3">
+                                    <a href="{{ route('tailor.download', $run) }}"
+                                       class="font-medium text-slate-900 underline decoration-slate-300 underline-offset-2 hover:decoration-slate-900">
+                                        Download
+                                    </a>
+                                    <form method="POST" action="{{ route('tailor.destroy', $run) }}"
+                                          onsubmit="return confirm('Delete this run and its PDF? This cannot be undone.');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="font-medium text-red-600 hover:text-red-700">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @endforeach

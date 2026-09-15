@@ -31,6 +31,22 @@ class PdfGenerator
         return config('services.tailor.pdf_disk');
     }
 
+    /**
+     * Human-facing download name, e.g. "Peter_Madrid_Resume.pdf".
+     * Derived from the resume name so it stays correct if the name changes.
+     */
+    public function downloadName(): string
+    {
+        $name = (string) config('resume.personal.name', 'Resume');
+        // Collapse to alnum words, join with underscores.
+        $parts = preg_split('/\s+/', trim($name)) ?: [];
+        $clean = array_filter(array_map(fn ($p) => preg_replace('/[^A-Za-z0-9]/', '', $p), $parts));
+
+        $base = $clean ? implode('_', $clean) : 'Resume';
+
+        return "{$base}_Resume.pdf";
+    }
+
     /** Traceable filename: {slug-name}-{timestamp}-{rand}.pdf under the configured folder. */
     private function buildPath(string $name): string
     {

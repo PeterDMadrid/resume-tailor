@@ -8,6 +8,8 @@ namespace App\Services;
  */
 class ResumeTailorPrompt
 {
+    public function __construct(private readonly ConstantSkills $constants) {}
+
     /**
      * @return array the full generateContent request body
      */
@@ -27,7 +29,7 @@ class ResumeTailorPrompt
         ];
     }
 
-    /** Flat list of every allowed skill, drawn from grouped skill_pool. */
+    /** Flat list of every allowed skill: skill_pool + constant skills. */
     public function allowedSkills(): array
     {
         $flat = [];
@@ -36,6 +38,8 @@ class ResumeTailorPrompt
                 $flat[] = $skill;
             }
         }
+
+        $flat = array_merge($flat, $this->constants->names());
 
         return array_values(array_unique($flat));
     }

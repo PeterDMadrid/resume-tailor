@@ -16,11 +16,12 @@ return [
 
     'personal' => [
         'name' => 'Peter Kirsch Madrid',
-        'email' => '[PLACEHOLDER] you@example.com',
+        'email' => 'petermadrid0421@gmail.com',
         'phone' => '+639765296586',
         'location' => 'Quezon City',
         'links' => [
             'Portfolio' => 'https://peter-azure.vercel.app',
+            'LinkedIn' => 'https://www.linkedin.com/in/peter-madrid-99752223b/',
         ],
     ],
 
@@ -49,8 +50,7 @@ return [
             'current' => false,
             'bullets' => [
                 'Centralized enrollment, learning, payment verification, and administrative workflows into a single LMS for Margallo Review Center, reducing reliance on manual processing and giving staff a unified platform for managing students and courses.',
-                'Enabled customers to browse, purchase, and track orders for food and everyday consumer products for Verhn Online Market through a unified online marketplace, replacing fragmented ordering workflows with a single digital storefront.',
-                'Streamlined product-to-order operations for LR Global Distribution by bringing product management, customer ordering, checkout, and fulfillment workflows into a single e-commerce platform.',
+                'Developed and maintained a B2B SaaS e-commerce platform supporting 20+ sellers with online storefronts, product management, checkout, payments, orders, and customer workflows.',
             ],
         ],
         [

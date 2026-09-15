@@ -25,7 +25,7 @@
         .contact .sep { color: #aaa; padding: 0 4px; }
 
         /* Section */
-        .section { margin-top: 14px; }
+        .section { margin-top: 8px; }
         .section-title {
             font-size: 11px;
             font-weight: bold;
@@ -40,7 +40,7 @@
         p { margin: 0 0 4px; }
 
         /* Experience */
-        .job { margin-bottom: 9px; page-break-inside: avoid; }
+        .job { margin-bottom: 4px; page-break-inside: avoid; }
         .job-head { width: 100%; }
         .job-title { font-weight: bold; font-size: 10.5px; }
         .job-company { color: #333; }
@@ -50,7 +50,7 @@
         li { margin-bottom: 2px; }
 
         /* Skills (grouped) */
-        .skill-row { margin-bottom: 3px; }
+        .skill-row { margin-bottom: 1px; }
         .skill-group { font-weight: bold; }
 
         /* Education / certs */

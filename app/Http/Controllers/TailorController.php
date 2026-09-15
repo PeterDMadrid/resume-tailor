@@ -21,9 +21,21 @@ class TailorController extends Controller
     // History: past runs, newest first.
     public function index()
     {
-        $runs = TailoringRun::latest()->paginate(15);
+        $runs = TailoringRun::latest()->paginate(25);
 
         return view('tailor.index', compact('runs'));
+    }
+
+    // Delete a run and its stored PDF.
+    public function destroy(TailoringRun $run, PdfGenerator $pdf)
+    {
+        if ($run->pdf_path) {
+            Storage::disk($pdf->disk())->delete($run->pdf_path);
+        }
+
+        $run->delete();
+
+        return back()->with('status', 'Run deleted.');
     }
 
     // Re-download a stored PDF; verify it still exists on disk first.
@@ -35,7 +47,7 @@ class TailorController extends Controller
             return back()->with('error', 'That PDF is no longer available on disk.');
         }
 
-        return $disk->download($run->pdf_path);
+        return $disk->download($run->pdf_path, $pdf->downloadName());
     }
 
     // Full flow: validate -> tailor via AI -> assemble -> render+store PDF -> download.
@@ -82,10 +94,10 @@ class TailorController extends Controller
 
     // Preview the resume rendered from config only (no AI). Streamed inline
     // so it can be embedded in the preview modal's iframe.
-    public function preview(ResumeAssembler $assembler)
+    public function preview(ResumeAssembler $assembler, PdfGenerator $generator)
     {
         $pdf = Pdf::loadView('resume.template', $assembler->build());
 
-        return $pdf->stream('resume-template.pdf'); // inline (Content-Disposition: inline)
+        return $pdf->stream($generator->downloadName()); // inline (Content-Disposition: inline)
     }
 }

@@ -22,6 +22,10 @@
                    class="rounded-md px-3 py-1.5 font-medium transition hover:bg-slate-100 {{ request()->routeIs('tailor.index') ? 'bg-slate-100 text-slate-900' : 'text-slate-600' }}">
                     History
                 </a>
+                <a href="{{ route('constants.index') }}"
+                   class="rounded-md px-3 py-1.5 font-medium transition hover:bg-slate-100 {{ request()->routeIs('constants.index') ? 'bg-slate-100 text-slate-900' : 'text-slate-600' }}">
+                    Constants
+                </a>
                 <button type="button" data-preview-open
                         class="ml-1 inline-flex items-center gap-1.5 rounded-md bg-gradient-to-r from-indigo-500 to-violet-500 px-3 py-1.5 font-medium text-white shadow-sm ring-1 ring-inset ring-white/20 transition hover:from-indigo-400 hover:to-violet-400">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4">
