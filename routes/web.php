@@ -10,6 +10,7 @@ Route::redirect('/', '/tailor');
 Route::get('/tailor', [TailorController::class, 'create'])->name('tailor.create');
 Route::post('/tailor', [TailorController::class, 'store'])->name('tailor.store');
 Route::get('/tailor/result/{run}', [TailorController::class, 'result'])->name('tailor.result');
+Route::patch('/tailor/result/{run}/skills', [TailorController::class, 'update'])->name('tailor.update');
 
 // Preview the resume template from config only (no AI) — streamed inline.
 Route::get('/tailor/preview', [TailorController::class, 'preview'])->name('tailor.preview');

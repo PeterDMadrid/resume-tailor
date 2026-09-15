@@ -41,6 +41,8 @@ return [
         'jd_min_length' => 50,
         'pdf_disk' => env('RESUME_PDF_DISK', 'local'),
         'pdf_path' => env('RESUME_PDF_PATH', 'resumes'),
+        // Max JD-relevant skills to add beyond the pool (0 = pool-only).
+        'max_extra_skills' => (int) env('TAILOR_MAX_EXTRA_SKILLS', 6),
     ],
 
     // Gemini API config. Read via config('services.gemini.*'), never env() in app code.

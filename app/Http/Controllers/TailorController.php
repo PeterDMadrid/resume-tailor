@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TailorRequest;
+use App\Http\Requests\UpdateSkillsRequest;
 use App\Models\TailoringRun;
 use App\Services\GeminiService;
 use App\Services\PdfGenerator;
@@ -90,6 +91,35 @@ class TailorController extends Controller
     public function result(TailoringRun $run)
     {
         return view('tailor.result', compact('run'));
+    }
+
+    // Regenerate the PDF for a run using a trimmed set of skills (skills-only
+    // edit). Overwrites the same run's stored PDF. Headline/summary unchanged.
+    public function update(TailoringRun $run, UpdateSkillsRequest $request, ResumeAssembler $assembler, PdfGenerator $pdf)
+    {
+        $skills = $request->groupedSkills();
+
+        if ($skills === []) {
+            return back()->with('error', 'Keep at least one skill.');
+        }
+
+        $viewData = $assembler->build([
+            'headline' => $run->generated_headline,
+            'summary' => $run->generated_summary,
+            'skills' => $skills,
+        ], mergeConstants: false); // respect the user's trimmed list exactly
+
+        $disk = Storage::disk($pdf->disk());
+        if ($run->pdf_path) {
+            $disk->delete($run->pdf_path); // overwrite: remove old file
+        }
+
+        $run->update([
+            'generated_skills' => $skills,
+            'pdf_path' => $pdf->store($viewData),
+        ]);
+
+        return redirect()->route('tailor.result', $run)->with('status', 'Skills updated and PDF regenerated.');
     }
 
     // Preview the resume rendered from config only (no AI). Streamed inline

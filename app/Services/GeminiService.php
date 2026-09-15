@@ -79,10 +79,10 @@ class GeminiService
             return $this->rejectAndLog('missing/invalid keys', $response);
         }
 
-        $skills = $this->filterToPool($decoded['skills']);
+        $skills = $this->groupSkills($decoded['skills']);
 
         if ($skills === []) {
-            return $this->rejectAndLog('no valid skills after filtering', $response);
+            return $this->rejectAndLog('no valid skills after grouping', $response);
         }
 
         return new TailoredContent(
@@ -104,15 +104,17 @@ class GeminiService
     }
 
     /**
-     * Keeps only skills that genuinely exist in skill_pool (case-insensitive),
-     * then regroups them under their config group, preserving AI ordering.
+     * Builds grouped skills from the AI's [{name, group}] list.
+     * Known skills (pool + constants) use their canonical name/group.
+     * Unknown skills the JD named are kept too, up to a configured cap,
+     * placed in the AI-assigned group. Order + grouping preserved.
      *
      * @param  array<int,mixed>  $returned
      * @return array<string,string[]>
      */
-    private function filterToPool(array $returned): array
+    private function groupSkills(array $returned): array
     {
-        // Map lowercased skill => [group, canonical name]. Pool + constants.
+        // Canonical lookup: lowercased name => [group, canonical name].
         $lookup = [];
         foreach ((array) config('resume.skill_pool') as $group => $skills) {
             foreach ($skills as $skill) {
@@ -125,19 +127,39 @@ class GeminiService
             }
         }
 
+        $maxExtra = max(0, (int) config('services.tailor.max_extra_skills'));
+        $extraCount = 0;
+
         $grouped = [];
-        foreach ($returned as $skill) {
-            if (! is_string($skill)) {
+        $seen = [];
+        foreach ($returned as $item) {
+            // Accept {name, group}; tolerate a bare string too.
+            $name = is_array($item) ? ($item['name'] ?? null) : $item;
+            $aiGroup = is_array($item) ? ($item['group'] ?? null) : null;
+            if (! is_string($name) || trim($name) === '') {
                 continue;
             }
-            $key = mb_strtolower(trim($skill));
+            $name = trim($name);
+            $key = mb_strtolower($name);
+            if (isset($seen[$key])) {
+                continue; // de-dupe across all groups
+            }
+
             if (isset($lookup[$key])) {
+                // Known skill: canonical name + group.
                 [$group, $canonical] = $lookup[$key];
                 $grouped[$group][] = $canonical;
+                $seen[$key] = true;
+            } elseif ($extraCount < $maxExtra) {
+                // JD-relevant extra: keep, in the AI's group (or "Other").
+                $group = is_string($aiGroup) && trim($aiGroup) !== '' ? trim($aiGroup) : 'Other';
+                $grouped[$group][] = $name;
+                $seen[$key] = true;
+                $extraCount++;
             }
+            // else: over the extra cap -> drop.
         }
 
-        // De-dupe within each group.
         foreach ($grouped as $group => $items) {
             $grouped[$group] = array_values(array_unique($items));
         }

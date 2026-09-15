@@ -24,4 +24,29 @@ function initPreviewModal() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', initPreviewModal);
+// Result page: remove skill chips before regenerating the PDF.
+function initSkillEditor() {
+    const form = document.querySelector('[data-skills-form]');
+    if (!form) return;
+
+    const dirty = form.querySelector('[data-skills-dirty]');
+
+    form.querySelectorAll('[data-skill-remove]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const chip = btn.closest('[data-skill-chip]');
+            const group = chip.closest('[data-skill-group]');
+            chip.remove();
+
+            // Drop the group heading if it's now empty.
+            if (group && group.querySelectorAll('[data-skill-chip]').length === 0) {
+                group.remove();
+            }
+            if (dirty) dirty.classList.remove('hidden');
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initPreviewModal();
+    initSkillEditor();
+});
