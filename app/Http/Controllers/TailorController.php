@@ -7,6 +7,7 @@ use App\Models\TailoringRun;
 use App\Services\GeminiService;
 use App\Services\PdfGenerator;
 use App\Services\ResumeAssembler;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 
 class TailorController extends Controller
@@ -77,5 +78,14 @@ class TailorController extends Controller
     public function result(TailoringRun $run)
     {
         return view('tailor.result', compact('run'));
+    }
+
+    // Preview the resume rendered from config only (no AI). Streamed inline
+    // so it can be embedded in the preview modal's iframe.
+    public function preview(ResumeAssembler $assembler)
+    {
+        $pdf = Pdf::loadView('resume.template', $assembler->build());
+
+        return $pdf->stream('resume-template.pdf'); // inline (Content-Disposition: inline)
     }
 }

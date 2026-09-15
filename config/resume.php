@@ -15,53 +15,71 @@
 return [
 
     'personal' => [
-        'name' => '[PLACEHOLDER] Your Name',
+        'name' => 'Peter Kirsch Madrid',
         'email' => '[PLACEHOLDER] you@example.com',
-        'phone' => '[PLACEHOLDER] +63 900 000 0000',
-        'location' => '[PLACEHOLDER] City, Country',
+        'phone' => '+639765296586',
+        'location' => 'Quezon City',
         'links' => [
-            // label => url
-            'LinkedIn' => 'https://linkedin.com/in/your-handle',
-            'GitHub' => 'https://github.com/your-handle',
-            'Portfolio' => 'https://your-site.example',
+            'Portfolio' => 'https://peter-azure.vercel.app',
         ],
     ],
 
     // Most recent first.
     'education' => [
         [
-            'institution' => '[PLACEHOLDER] University Name',
-            'degree' => '[PLACEHOLDER] BS in Something',
-            'dates' => '[PLACEHOLDER] 2018 - 2022',
+            'institution' => 'Technological Institute of the Philippines - Quezon City',
+            'degree' => 'Bachelor of Science in Information Technology',
+            'dates' => 'June 2020 - Aug 2025',
         ],
     ],
 
     // Flat list of certifications (strings).
     'certifications' => [
-        '[PLACEHOLDER] Certification Name — Issuer (Year)',
+        'AWS Certified Cloud Practitioner',
+        'IBM Enterprise Design Thinking Practitioner',
     ],
 
     // Most recent first. Each role's bullets stay UNTOUCHED by AI.
     'experience' => [
         [
-            'title' => '[PLACEHOLDER] Job Title',
-            'company' => '[PLACEHOLDER] Company Name',
-            'location' => '[PLACEHOLDER] City, Country',
-            'date_range' => '[PLACEHOLDER] Jan 2023 - Present',
-            'current' => true,
+            'title' => 'Freelance Software Developer',
+            'company' => 'Axiom Systems (Freelance / B2B SaaS)',
+            'location' => 'Quezon City',
+            'date_range' => 'June 2026 - Present',
+            'current' => false,
             'bullets' => [
-                '[PLACEHOLDER] Accomplishment with a measurable result.',
-                '[PLACEHOLDER] Another responsibility or impact.',
+                'Centralized enrollment, learning, payment verification, and administrative workflows into a single LMS for Margallo Review Center, reducing reliance on manual processing and giving staff a unified platform for managing students and courses.',
+                'Enabled customers to browse, purchase, and track orders for food and everyday consumer products for Verhn Online Market through a unified online marketplace, replacing fragmented ordering workflows with a single digital storefront.',
+                'Streamlined product-to-order operations for LR Global Distribution by bringing product management, customer ordering, checkout, and fulfillment workflows into a single e-commerce platform.',
             ],
         ],
         [
-            'title' => '[PLACEHOLDER] Previous Job Title',
-            'company' => '[PLACEHOLDER] Previous Company',
-            'location' => '[PLACEHOLDER] City, Country',
-            'date_range' => '[PLACEHOLDER] 2021 - 2023',
+            'title' => 'Junior Web Developer',
+            'company' => 'Digimax IT Solutions',
+            'location' => '2/F 384 P. Tuazon Blvd., Project 4, Quezon City, 1109',
+            'date_range' => 'Nov 2025 - June 2026',
             'current' => false,
             'bullets' => [
-                '[PLACEHOLDER] Accomplishment with a measurable result.',
+                'Built customized Computerized Accounting Systems (CAS) for multiple clients using Laravel and Vue.js, tailoring workflows to client-specific accounting requirements',
+                'Engineered automated receipt-to-document pipeline for two airline clients via secure SSH, converting receipts into invoices, credit memos, and accounting reports',
+                'Migrated data across CAS systems with differing schemas for 5+ client deployments, maintaining integrity and traceability',
+                'Established reusable architecture patterns across 10+ concurrent projects, reducing code duplication',
+                'Led development of configurable system settings module, cutting per-client setup time ~40%',
+                'Used AI-assisted tools (Claude, Cursor) to speed up code review and documentation',
+                'Managed server-side deployments via FileZilla, MobaXterm/Termius, direct SSH to Linux production servers',
+            ],
+        ],
+        [
+            'title' => 'Intern Software Developer',
+            'company' => 'HiPe Japan Inc',
+            'location' => 'Eastwood Global Plaza, Eastwood, Quezon City',
+            'date_range' => 'Feb 2024 - June 2024',
+            'current' => false,
+            'bullets' => [
+                'Built and deployed microblogging app in Laravel (MVC, RESTful architecture)',
+                'Led 4-member team through 4 Agile sprints, delivering functional prototype in 8 weeks',
+                'Fixed production UI bugs alongside senior engineer, reducing user-reported issues',
+                'Presented technical demo to engineering panel',
             ],
         ],
     ],
@@ -73,19 +91,38 @@ return [
     */
     'skill_pool' => [
         'Languages' => [
-            '[PLACEHOLDER] PHP', 'JavaScript', 'SQL',
+            'PHP', 'JavaScript', 'TypeScript', 'Python',
+        ],
+        'AI' => [
+            'API (RAG/embeddings)', 'Ollama (local LLM scoring)',
+        ],
+        'CI/CD' => [
+            'GitHub Actions',
         ],
         'Frameworks' => [
-            '[PLACEHOLDER] Laravel', 'Vue.js',
+            'Laravel', 'Vue 3', 'Next.js', 'Django', 'ASP.NET WebForms (VB.NET)',
         ],
-        'Tools' => [
-            '[PLACEHOLDER] Git', 'Docker', 'Linux',
+        'Databases' => [
+            'MySQL', 'MS SQL Server',
+        ],
+        'Servers & Deployments' => [
+            'Linux (Ubuntu)', 'Apache2', 'Nginx', 'SSH', 'Server Deployment',
+        ],
+        'Cloud & DevOps' => [
+            'EC2', 'Cloudflare R2', 'PM2', 'Nginx', 'Docker',
+        ],
+        'Security & Data Handling' => [
+            'Data Migration', 'Backup & Restore', 'Information Security', 'Access Control (RBAC)',
+        ],
+        'API & Integration' => [
+            'REST API Design & Development',
         ],
     ],
 
     // Used when AI is unavailable or its output fails validation.
-    'default_headline' => '[PLACEHOLDER] Full-Stack Developer',
-    'default_summary' => '[PLACEHOLDER] Short 2-3 sentence professional summary '
-        .'used as a safe fallback when AI tailoring is not available.',
+    'default_headline' => 'Full-Stack Software Engineer (Laravel & Vue.js)',
+    'default_summary' => 'Full-stack software engineer specializing in Laravel and Vue.js. '
+        .'Experience across accounting systems, LMS platforms, and enterprise data migration. '
+        .'Skilled in application architecture, database design, and Linux server deployment.',
 
 ];
