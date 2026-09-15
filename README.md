@@ -1,58 +1,274 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Resume Tailor
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> An AI-powered local resume tailoring tool built with Laravel. Paste a job description, let Gemini tailor the relevant parts of the resume, and generate a polished PDF ready for submission.
 
-## About Laravel
+## Overview
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Resume Tailor is a **local-only Laravel prototype** designed to quickly adapt a base resume to different job descriptions.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+The user provides a job description manually. The application sends the job description and the user's predefined resume data to Gemini, which generates a tailored **headline, professional summary, and skills list**. The application then combines those AI-generated sections with the user's fixed resume information and renders the final resume as a PDF.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+The system is intentionally minimal and focused on the core workflow.
 
-## Learning Laravel
+## Architecture
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+```mermaid
+flowchart TD
+    A[User] -->|Paste Job Description| B[Laravel Application]
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+    B --> C[Base Resume Data]
+    B --> D[Gemini API]
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+    C --> D
+    D -->|Structured JSON| E[Validate AI Response]
 
-## Agentic Development
+    E -->|Valid| F[Merge Resume Data]
+    E -->|Invalid| G[Handle AI Error]
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+    F --> H[Blade Resume Template]
+    H --> I[DomPDF]
+    I --> J[Generated PDF]
 
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+    B --> K[(SQLite)]
+    J --> K
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Resume Data Flow
 
-## Contributing
+```mermaid
+flowchart LR
+    A[Base Resume] --> B[Laravel]
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+    A --> C[Immutable Facts]
+    C --> C1[Name]
+    C --> C2[Contact]
+    C --> C3[Education]
+    C --> C4[Certifications]
+    C --> C5[Experience]
 
-## Code of Conduct
+    A --> D[Allowed Skills]
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+    E[Job Description] --> F[Gemini]
 
-## Security Vulnerabilities
+    D --> F
+    E --> F
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+    F --> G[Headline]
+    F --> H[Summary]
+    F --> I[Reordered Skills]
 
-## License
+    C --> J[Final Resume]
+    G --> J
+    H --> J
+    I --> J
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Core Workflow
+
+```text
+                    RESUME TAILOR
+                         │
+                         ▼
+              ┌─────────────────────┐
+              │ Paste Job Description│
+              └──────────┬──────────┘
+                         │
+                         ▼
+              ┌─────────────────────┐
+              │   Laravel Backend   │
+              └──────────┬──────────┘
+                         │
+              ┌──────────┴──────────┐
+              ▼                     ▼
+       Base Resume Data        Gemini API
+              │                     │
+              │              ┌──────▼──────┐
+              │              │ Tailor Only │
+              │              │ 3 Sections  │
+              │              └──────┬──────┘
+              │                     │
+              └──────────┬──────────┘
+                         ▼
+              ┌─────────────────────┐
+              │ Validate AI Output  │
+              └──────────┬──────────┘
+                         │
+                         ▼
+              ┌─────────────────────┐
+              │ Merge Resume Data   │
+              └──────────┬──────────┘
+                         │
+                         ▼
+              ┌─────────────────────┐
+              │   Blade Template    │
+              └──────────┬──────────┘
+                         │
+                         ▼
+              ┌─────────────────────┐
+              │       DomPDF        │
+              └──────────┬──────────┘
+                         │
+                         ▼
+                  ┌─────────────┐
+                  │ Download PDF│
+                  └─────────────┘
+```
+
+## AI Responsibility
+
+Gemini is deliberately restricted to tailoring only three parts of the resume:
+
+| Section              | AI Can Modify                   |
+| -------------------- | ------------------------------- |
+| Headline             | Yes                             |
+| Professional Summary | Yes                             |
+| Skills               | Yes, using existing skills only |
+| Full Name            | No                              |
+| Contact Information  | No                              |
+| Education            | No                              |
+| Certifications       | No                              |
+| Job Titles           | No                              |
+| Companies            | No                              |
+| Employment Dates     | No                              |
+| Experience Bullets   | No                              |
+
+The AI **does not own the resume**. It only produces tailored content that is merged with the authoritative base resume.
+
+### No Fabrication
+
+Gemini must not invent:
+
+* Skills
+* Technologies
+* Work experience
+* Job titles
+* Companies
+* Dates
+* Certifications
+* Education
+* Achievements
+
+The skills returned by Gemini must come from the predefined base skill list.
+
+## Expected AI Response
+
+The application expects Gemini to return strict structured data containing only:
+
+```text
+headline
+summary
+skills[]
+```
+
+The Laravel application validates the response before using it.
+
+It must also safely handle cases where Gemini:
+
+* Wraps JSON in Markdown fences
+* Returns malformed JSON
+* Omits required fields
+* Returns incorrect data types
+* Returns skills that are not part of the approved skill list
+* Fails to respond successfully
+
+Invalid AI output must never be treated as valid resume data.
+
+## Technology Stack
+
+| Technology          | Purpose                  |
+| ------------------- | ------------------------ |
+| Laravel 11          | Application backend      |
+| PHP 8.2+            | Backend language         |
+| Blade               | Resume template and UI   |
+| Gemini 2.0 Flash    | AI tailoring             |
+| Laravel HTTP Client | Gemini API communication |
+| DomPDF              | PDF generation           |
+| SQLite              | Local persistence        |
+| `.env`              | API key configuration    |
+
+## Project Scope
+
+This is intentionally a small prototype.
+
+### Included
+
+* Manual job description input
+* AI-assisted resume tailoring
+* Structured AI response validation
+* Blade-based resume rendering
+* PDF generation
+* Local tailoring history
+* Optional history interface
+
+### Not Included
+
+* Authentication
+* Multi-user support
+* Multi-tenancy
+* Job scraping
+* Job board integrations
+* Automated job searching
+* Automatic applications
+* Application submission
+* Email automation
+* Cloud deployment
+* Production infrastructure
+
+## Data Ownership
+
+The application follows a simple separation of responsibility:
+
+```mermaid
+flowchart LR
+    A[Hardcoded Base Resume] -->|Authoritative Facts| C[Final Resume]
+    B[Gemini AI] -->|Tailored Content Only| C
+
+    A --> D[Name]
+    A --> E[Contact]
+    A --> F[Education]
+    A --> G[Certifications]
+    A --> H[Experience]
+
+    B --> I[Headline]
+    B --> J[Summary]
+    B --> K[Existing Skills Only]
+```
+
+**Base resume data is the source of truth.**
+
+Gemini is a transformation layer, not a source of factual information.
+
+## Local Development
+
+The application is intended to run locally only using Laravel's development server.
+
+```text
+Browser
+   │
+   ▼
+localhost
+   │
+   ▼
+Laravel
+   │
+   ├── Gemini API
+   ├── SQLite
+   └── DomPDF
+```
+
+The Gemini API key is stored in `.env` and must never be hardcoded or committed to the repository.
+
+## Design Goal
+
+The prototype prioritizes:
+
+* Clear separation between factual and AI-generated data
+* Predictable AI output
+* Validation before rendering
+* Simple Laravel architecture
+* Maintainable Blade templates
+* Minimal dependencies
+* Local-first development
+* No unnecessary production infrastructure
+
+The main objective is not to build a full resume platform, but to create a **small, reliable pipeline for turning a job description into a tailored resume PDF while keeping factual resume information under strict application control.**
