@@ -42,7 +42,7 @@ return [
         'pdf_disk' => env('RESUME_PDF_DISK', 'local'),
         'pdf_path' => env('RESUME_PDF_PATH', 'resumes'),
         // Max JD-relevant skills to add beyond the pool (0 = pool-only).
-        'max_extra_skills' => (int) env('TAILOR_MAX_EXTRA_SKILLS', 6),
+        'max_extra_skills' => (int) env('TAILOR_MAX_EXTRA_SKILLS', 10),
     ],
 
     // n8n webhook. Fired after PDF generation when a company_email is present.

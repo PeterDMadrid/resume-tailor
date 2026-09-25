@@ -94,7 +94,8 @@ return [
             'PHP', 'JavaScript', 'TypeScript', 'Python',
         ],
         'AI' => [
-            'API (RAG/embeddings)', 'Ollama (local LLM scoring)',
+            'API (RAG/embeddings)',
+            'AI API Integration', 'n8n Automation',
         ],
         'CI/CD' => [
             'GitHub Actions',
