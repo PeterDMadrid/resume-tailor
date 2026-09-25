@@ -91,45 +91,73 @@ return [
     */
     'skill_pool' => [
         'Languages' => [
-            'PHP', 'JavaScript', 'TypeScript', 'Python',
+            'PHP',
+            'JavaScript',
+            'TypeScript',
+            'Python',
+            'SQL',
+            'VB.NET',
         ],
         'AI' => [
             'API (RAG/embeddings)',
-            'AI API Integration', 'n8n Automation',
+            'AI API Integration',
+            'n8n Automation',
         ],
         'CI/CD' => [
             'GitHub Actions',
         ],
         'Frameworks' => [
-            'Laravel', 'Vue 3', 'Next.js', 'Django', 'ASP.NET WebForms (VB.NET)',
+            'Laravel',
+            'Vue 3',
+            'Next.js',
+            'Django',
+            'ASP.NET WebForms (VB.NET)',
         ],
         'Databases' => [
-            'MySQL', 'MS SQL Server',
+            'MySQL',
+            'MS SQL Server',
+            'PostgreSQL',
         ],
         'Servers & Deployments' => [
-            'Linux (Ubuntu)', 'Apache2', 'Nginx', 'SSH', 'Server Deployment',
+            'Linux (Ubuntu)',
+            'Apache2',
+            'Nginx',
+            'SSH',
+            'Server Deployment',
         ],
         'Cloud & DevOps' => [
-            'EC2', 'Cloudflare R2', 'PM2', 'Nginx', 'Docker',
+            'AWS EC2',
+            'Cloudflare R2',
+            'PM2',
+            'Docker',
         ],
         'Security & Data Handling' => [
-            'Data Migration', 'Backup & Restore', 'Information Security', 'Access Control (RBAC)',
+            'Data Migration',
+            'Backup & Restore',
+            'Information Security',
+            'Access Control (RBAC)',
+            'Authentication & Authorization',
         ],
         'API & Integration' => [
             'REST API Design & Development',
+            'Third-Party API Integration',
+            'Payment Gateway Integration',
+            'Webhook Integration',
+            'OAuth2 / API Key Authentication',
+            'JSON / XML Data Handling',
         ],
     ],
 
     // Used when AI is unavailable or its output fails validation.
     'default_headline' => 'Full-Stack Software Engineer (Laravel & Vue.js)',
     'default_summary' => 'Full-stack software engineer specializing in Laravel and Vue.js. '
-        .'Experience across accounting systems, LMS platforms, and enterprise data migration. '
-        .'Skilled in application architecture, database design, and Linux server deployment.',
+        . 'Experience across accounting systems, LMS platforms, and enterprise data migration. '
+        . 'Skilled in application architecture, database design, and Linux server deployment.',
 
     // Fallback email fields (used when AI is unavailable). Sent with the webhook.
     'default_email_title' => 'Full-Stack Software Engineer (Laravel & Vue.js)',
     'default_email_message' => 'Hi, I came across your opening and believe my full-stack '
-        .'experience with Laravel and Vue.js is a strong fit. My tailored resume is attached '
-        .'for your review. I would welcome the chance to discuss the role.',
+        . 'experience with Laravel and Vue.js is a strong fit. My tailored resume is attached '
+        . 'for your review. I would welcome the chance to discuss the role.',
 
 ];
