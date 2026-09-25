@@ -54,7 +54,13 @@
 
                 @if ($run->email_message)
                     <p class="mt-3 text-xs font-medium text-slate-500">Message</p>
-                    <p class="mt-0.5 whitespace-pre-line text-sm leading-relaxed text-slate-700">{{ $run->email_message }}</p>
+                    {{-- Body is stored as HTML (only <br> tags). Convert breaks to
+                         newlines, escape everything, then re-add breaks so the
+                         preview shows the same line breaks n8n will render. --}}
+                    @php
+                        $preview = str_ireplace(['<br><br>', '<br/>', '<br />', '<br>'], "\n", $run->email_message);
+                    @endphp
+                    <p class="mt-0.5 text-sm leading-relaxed text-slate-700">{!! nl2br(e($preview)) !!}</p>
                 @endif
             </section>
         @endif
