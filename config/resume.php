@@ -97,6 +97,8 @@ return [
             'Python',
             'SQL',
             'VB.NET',
+            'HTML5',
+            'CSS3',
         ],
         'AI' => [
             'API (RAG/embeddings)',
