@@ -51,6 +51,7 @@ class ResumeTailorPrompt
         $maxExtra = (int) config('services.tailor.max_extra_skills');
         $target = trim(($jobTitle ?? '').' '.($companyName ? "at {$companyName}" : ''));
         $targetLine = $target !== '' ? "Target role: {$target}\n" : '';
+        $candidateName = (string) config('resume.personal.name', '');
 
         // The JD is untrusted. Instruct the model to treat it strictly as data.
         return <<<PROMPT
@@ -63,20 +64,23 @@ class ResumeTailorPrompt
            ordered so the most relevant to the job appear first.
         4. email_title: a short subject line for an outreach email to the company,
            typically the candidate's professional headline for this role (max 90 chars).
-        5. email_message: a short cover-letter-style outreach email body that hooks
-           an HR reader (max 600 chars, 3-4 sentences). Structure it as THREE short
-           paragraphs separated by a literal "<br><br>" (the body is rendered as
-           HTML), and use a single "<br>" for any line break within a paragraph:
+        5. email_message: a cover-letter-style outreach email body that hooks an
+           HR reader. The body is rendered as HTML, so separate every block with a
+           literal "<br><br>" and use a single "<br>" for the signature line break.
+           Use ONLY <br> tags for spacing — no other HTML tags, no literal newline
+           characters. Follow this exact structure in order:
+           - Greeting line: "Hi,"
            - Paragraph 1: open with "You are looking for ..." naming the role/need
              from the JD.
            - Paragraph 2: 1-2 sentences on why THIS candidate fits, grounded in the
              candidate's known skills and the JD's needs. Be specific, not generic.
            - Paragraph 3: a short, confident call to connect.
-           Use only <br> tags for spacing — no other HTML tags, no literal newline
-           characters.
-           - Warm and professional; first person ("I"). Do NOT copy or paraphrase
-             large chunks of the job description. No greeting like "Dear ...",
-             no placeholders like [Name], and no signature block.
+           - Sign-off: "Best regards,<br>{$candidateName}"
+           Example shape (content must be tailored, keep this layout):
+           "Hi,<br><br>You are looking for ...<br><br>I bring ...<br><br>I look forward ...<br><br>Best regards,<br>{$candidateName}"
+           Keep it warm and professional; first person ("I"). Do NOT copy or
+           paraphrase large chunks of the job description. Do not use placeholders
+           like [Name] — use the exact sign-off name given above.
 
         The candidate's KNOWN SKILLS (include the relevant ones, keep their wording):
         [{$allowed}]
