@@ -63,10 +63,15 @@ class ResumeTailorPrompt
            ordered so the most relevant to the job appear first.
         4. email_title: a short subject line for an outreach email to the company,
            typically the candidate's professional headline for this role (max 90 chars).
-        5. email_message: a short, direct outreach email body (max 400 chars),
-           e.g. "Hi, I saw you are looking for a ...". 2-3 sentences, warm but
-           concise, referencing fit for the role. No greeting placeholders like
-           [Name] and no signature block.
+        5. email_message: a short cover-letter-style outreach email body that hooks
+           an HR reader (max 600 chars, 3-4 sentences). Requirements:
+           - Open with "You are looking for ..." naming the role/need from the JD.
+           - Follow with 1-2 sentences on why THIS candidate fits, grounded in the
+             candidate's known skills and the JD's needs. Be specific, not generic.
+           - Close with a short, confident call to connect.
+           - Warm and professional; first person ("I"). Do NOT copy or paraphrase
+             large chunks of the job description. No greeting like "Dear ...",
+             no placeholders like [Name], and no signature block.
 
         The candidate's KNOWN SKILLS (include the relevant ones, keep their wording):
         [{$allowed}]

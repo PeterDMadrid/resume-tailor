@@ -36,6 +36,29 @@
             <p class="mt-1 text-sm leading-relaxed text-slate-700">{{ $run->generated_summary }}</p>
         </section>
 
+        @if ($run->email_title || $run->email_message)
+            <section class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xs font-semibold uppercase tracking-wide text-slate-400">Outreach email</h2>
+                    @if ($run->company_email)
+                        <span class="text-xs text-slate-400">Sent to {{ $run->company_email }} via webhook</span>
+                    @else
+                        <span class="text-xs text-slate-400">Preview only — no company email was provided</span>
+                    @endif
+                </div>
+
+                @if ($run->email_title)
+                    <p class="mt-3 text-xs font-medium text-slate-500">Subject</p>
+                    <p class="mt-0.5 text-sm font-medium text-slate-900">{{ $run->email_title }}</p>
+                @endif
+
+                @if ($run->email_message)
+                    <p class="mt-3 text-xs font-medium text-slate-500">Message</p>
+                    <p class="mt-0.5 whitespace-pre-line text-sm leading-relaxed text-slate-700">{{ $run->email_message }}</p>
+                @endif
+            </section>
+        @endif
+
         <section class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
             <div class="flex items-center justify-between">
                 <h2 class="text-xs font-semibold uppercase tracking-wide text-slate-400">Skills</h2>

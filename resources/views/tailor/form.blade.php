@@ -89,14 +89,24 @@
     </form>
 
     {{-- Send a dummy payload to n8n to verify the webhook without calling Gemini. --}}
-    <form method="POST" action="{{ route('tailor.test-webhook') }}" class="mt-4 flex items-center justify-between rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-3">
+    <form method="POST" action="{{ route('tailor.test-webhook') }}" class="mt-4 space-y-3 rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-3">
         @csrf
         <p class="text-xs text-slate-500">
             Test the n8n webhook with a dummy payload (no AI call, no PDF generated).
         </p>
-        <button type="submit"
-                class="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-100">
-            Send test webhook
-        </button>
+        <div>
+            <label for="test_email_title" class="mb-1 block text-xs font-medium text-slate-600">
+                Email title <span class="font-normal text-slate-400">(optional — leave blank for default)</span>
+            </label>
+            <input type="text" id="test_email_title" name="email_title" value="{{ old('email_title') }}"
+                   placeholder="Test Email Title - Full-Stack Engineer"
+                   class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none transition focus:border-slate-900 focus:ring-1 focus:ring-slate-900">
+        </div>
+        <div class="flex justify-end">
+            <button type="submit"
+                    class="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-100">
+                Send test webhook
+            </button>
+        </div>
     </form>
 @endsection

@@ -9,6 +9,7 @@ use App\Services\GeminiService;
 use App\Services\PdfGenerator;
 use App\Services\ResumeAssembler;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -183,21 +184,25 @@ class TailorController extends Controller
      * Send a dummy payload to n8n to verify the integration without calling
      * Gemini or generating a real PDF. Fired from a button on the form.
      */
-    public function testWebhook()
+    public function testWebhook(Request $request, ResumeAssembler $assembler)
     {
-        // A minimal, valid 1-page empty PDF so n8n receives a real base64 blob.
-        $dummyPdf = "%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n"
-            ."2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj\n"
-            ."3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]>>endobj\n"
-            ."xref\n0 4\n0000000000 65535 f \ntrailer<</Root 1 0 R/Size 4>>\n%%EOF";
+        // Render the real untailored resume (same as the preview: config only,
+        // no AI) so n8n receives an actual resume PDF, not a placeholder.
+        $realPdf = Pdf::loadView('resume.template', $assembler->build())->output();
+
+        // Let the tester override the email title; fall back to a default.
+        $emailTitle = trim((string) $request->input('email_title'));
+        if ($emailTitle === '') {
+            $emailTitle = 'Test Email Title - Full-Stack Engineer';
+        }
 
         $payload = [
-            'company_email' => 'test@example.com',
+            'company_email' => 'petermadrid0421@gmail',
             'job_title' => 'Test Job Title',
             'job_description' => 'This is a dummy job description used to test the n8n webhook payload.',
-            'email_title' => 'Test Email Title — Full-Stack Engineer',
+            'email_title' => $emailTitle,
             'email_message' => 'Hi, this is a test message to verify the webhook payload reaches n8n correctly.',
-            'resume_pdf_base64' => base64_encode($dummyPdf),
+            'resume_pdf_base64' => base64_encode($realPdf),
         ];
 
         try {
@@ -242,6 +247,10 @@ class TailorController extends Controller
             'generated_skills' => $skills,
             'pdf_path' => $pdf->store($viewData),
         ]);
+
+        // Re-fire the webhook so n8n gets the regenerated PDF. No-ops when the
+        // run has no company_email. Refresh so the new pdf_path is read.
+        $this->fireCompanyEmailWebhook($run->fresh(), $pdf);
 
         return redirect()->route('tailor.result', $run)->with('status', 'Skills updated and PDF regenerated.');
     }
