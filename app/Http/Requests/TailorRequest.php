@@ -21,6 +21,7 @@ class TailorRequest extends FormRequest
             ],
             'job_title' => ['nullable', 'string', 'max:255'],
             'company_name' => ['nullable', 'string', 'max:255'],
+            'company_email' => ['nullable', 'email'],
         ];
     }
 

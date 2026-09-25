@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class TailoringRun extends Model
 {
     protected $fillable = [
-        'job_description', 'company_name', 'job_title',
+        'job_description', 'company_name', 'job_title', 'company_email',
         'generated_headline', 'generated_summary', 'generated_skills',
         'pdf_path', 'model_used', 'status', 'raw_response',
     ];

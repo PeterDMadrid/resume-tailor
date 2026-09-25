@@ -45,6 +45,11 @@ return [
         'max_extra_skills' => (int) env('TAILOR_MAX_EXTRA_SKILLS', 6),
     ],
 
+    // n8n webhook. Fired after PDF generation when a company_email is present.
+    'n8n' => [
+        'webhook_url' => env('N8N_WEBHOOK_URL'),
+    ],
+
     // Gemini API config. Read via config('services.gemini.*'), never env() in app code.
     'gemini' => [
         'key' => env('GEMINI_API_KEY'),

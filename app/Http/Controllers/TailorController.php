@@ -9,6 +9,8 @@ use App\Services\GeminiService;
 use App\Services\PdfGenerator;
 use App\Services\ResumeAssembler;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class TailorController extends Controller
@@ -74,6 +76,7 @@ class TailorController extends Controller
             'job_description' => $data['job_description'],
             'company_name' => $data['company_name'] ?? null,
             'job_title' => $data['job_title'] ?? null,
+            'company_email' => $data['company_email'] ?? null,
             'generated_headline' => $tailored->headline,
             'generated_summary' => $tailored->summary,
             'generated_skills' => $tailored->skills,
@@ -83,8 +86,87 @@ class TailorController extends Controller
             'raw_response' => $tailored->raw,
         ]);
 
+        // Optional: notify n8n. Never let a webhook failure break the flow.
+        $this->fireCompanyEmailWebhook($run, $pdf);
+
         // Land on a result page (download available there + in history).
         return redirect()->route('tailor.result', $run);
+    }
+
+    /**
+     * Fire the n8n webhook when a company_email was provided on the run.
+     * Synchronous by design (single-user prototype). Failures are logged,
+     * never thrown, so the user's PDF download is unaffected.
+     */
+    private function fireCompanyEmailWebhook(TailoringRun $run, PdfGenerator $pdf): void
+    {
+        if (empty($run->company_email)) {
+            return; // behave exactly as before
+        }
+
+        try {
+            $disk = Storage::disk($pdf->disk());
+
+            if (! $run->pdf_path || ! $disk->exists($run->pdf_path)) {
+                Log::warning('Company-email webhook skipped: PDF missing on disk.', [
+                    'run_id' => $run->id,
+                    'pdf_path' => $run->pdf_path,
+                ]);
+
+                return;
+            }
+
+            $pdfBase64 = base64_encode($disk->get($run->pdf_path));
+
+            $payload = [
+                'company_email' => $run->company_email,
+                'job_title' => $run->job_title,
+                'job_description' => $run->job_description,
+                'resume_pdf_base64' => $pdfBase64,
+            ];
+
+            $url = config('services.n8n.webhook_url');
+
+            // Log the intended payload regardless of whether a URL is set,
+            // so you can inspect what would be sent. Size only for the blob.
+            Log::info('Company-email webhook payload prepared.', [
+                'run_id' => $run->id,
+                'url' => $url ?: '(not configured)',
+                'company_email' => $run->company_email,
+                'job_title' => $run->job_title,
+                'job_description_chars' => strlen((string) $run->job_description),
+                'pdf_base64_bytes' => strlen($pdfBase64), // the blob itself is not logged
+            ]);
+
+            if (empty($url)) {
+                Log::info('Company-email webhook not sent: N8N_WEBHOOK_URL is not configured.', [
+                    'run_id' => $run->id,
+                ]);
+
+                return; // nothing to POST to
+            }
+
+            $response = Http::post($url, $payload);
+
+            if ($response->successful()) {
+                Log::info('Company-email webhook delivered.', [
+                    'run_id' => $run->id,
+                    'status' => $response->status(),
+                ]);
+            }
+
+            if ($response->failed()) {
+                Log::warning('Company-email webhook returned a non-success status.', [
+                    'run_id' => $run->id,
+                    'status' => $response->status(),
+                ]);
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Company-email webhook failed.', [
+                'run_id' => $run->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     // Result page for a completed run.

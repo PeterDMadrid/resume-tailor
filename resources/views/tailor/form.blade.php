@@ -45,6 +45,18 @@
         </div>
 
         <div>
+            <label for="company_email" class="mb-1 block text-sm font-medium text-slate-700">
+                Company email <span class="font-normal text-slate-400">(optional)</span>
+            </label>
+            <input type="email" id="company_email" name="company_email" value="{{ old('company_email') }}"
+                   placeholder="e.g. jobs@acme.com"
+                   class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none transition focus:border-slate-900 focus:ring-1 focus:ring-slate-900">
+            <p class="mt-1 text-xs text-slate-400">
+                If set, the tailored resume is sent to this address via webhook.
+            </p>
+        </div>
+
+        <div>
             <label for="job_description" class="mb-1 block text-sm font-medium text-slate-700">
                 Job description
             </label>
