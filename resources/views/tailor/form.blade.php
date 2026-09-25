@@ -10,6 +10,18 @@
         </p>
     </div>
 
+    @if (session('status'))
+        <div class="mb-6 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+            {{ session('status') }}
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            {{ session('error') }}
+        </div>
+    @endif
+
     @if ($errors->any())
         <div class="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
             <p class="font-medium">Please fix the following:</p>
@@ -74,5 +86,17 @@
                 Tailor my resume
             </button>
         </div>
+    </form>
+
+    {{-- Send a dummy payload to n8n to verify the webhook without calling Gemini. --}}
+    <form method="POST" action="{{ route('tailor.test-webhook') }}" class="mt-4 flex items-center justify-between rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-3">
+        @csrf
+        <p class="text-xs text-slate-500">
+            Test the n8n webhook with a dummy payload (no AI call, no PDF generated).
+        </p>
+        <button type="submit"
+                class="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-100">
+            Send test webhook
+        </button>
     </form>
 @endsection

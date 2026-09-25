@@ -10,6 +10,9 @@ Route::redirect('/', '/tailor');
 Route::get('/tailor', [TailorController::class, 'create'])->name('tailor.create');
 Route::post('/tailor', [TailorController::class, 'store'])->name('tailor.store');
 Route::get('/tailor/result/{run}', [TailorController::class, 'result'])->name('tailor.result');
+
+// Send a dummy payload to n8n to verify the webhook (no Gemini call, no PDF).
+Route::post('/tailor/test-webhook', [TailorController::class, 'testWebhook'])->name('tailor.test-webhook');
 Route::patch('/tailor/result/{run}/skills', [TailorController::class, 'update'])->name('tailor.update');
 
 // Preview the resume template from config only (no AI) — streamed inline.

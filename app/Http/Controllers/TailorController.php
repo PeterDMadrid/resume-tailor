@@ -129,49 +129,85 @@ class TailorController extends Controller
                 'resume_pdf_base64' => $pdfBase64,
             ];
 
-            $url = config('services.n8n.webhook_url');
-
-            // Log the intended payload regardless of whether a URL is set,
-            // so you can inspect what would be sent. Size only for the blob.
-            Log::info('Company-email webhook payload prepared.', [
-                'run_id' => $run->id,
-                'url' => $url ?: '(not configured)',
-                'company_email' => $run->company_email,
-                'job_title' => $run->job_title,
-                'email_title' => $run->email_title,
-                'email_message' => $run->email_message,
-                'job_description_chars' => strlen((string) $run->job_description),
-                'pdf_base64_bytes' => strlen($pdfBase64), // the blob itself is not logged
-            ]);
-
-            if (empty($url)) {
-                Log::info('Company-email webhook not sent: N8N_WEBHOOK_URL is not configured.', [
-                    'run_id' => $run->id,
-                ]);
-
-                return; // nothing to POST to
-            }
-
-            $response = Http::post($url, $payload);
-
-            if ($response->successful()) {
-                Log::info('Company-email webhook delivered.', [
-                    'run_id' => $run->id,
-                    'status' => $response->status(),
-                ]);
-            }
-
-            if ($response->failed()) {
-                Log::warning('Company-email webhook returned a non-success status.', [
-                    'run_id' => $run->id,
-                    'status' => $response->status(),
-                ]);
-            }
+            $this->sendWebhook($payload, ['run_id' => $run->id]);
         } catch (\Throwable $e) {
             Log::warning('Company-email webhook failed.', [
                 'run_id' => $run->id,
                 'error' => $e->getMessage(),
             ]);
+        }
+    }
+
+    /**
+     * POST a payload to the configured n8n webhook. Logs the intended payload
+     * (metadata only for the PDF blob) whether or not a URL is set, so it can
+     * be inspected. Returns a short human-readable status string.
+     *
+     * @param  array<string,mixed>  $payload
+     * @param  array<string,mixed>  $logContext  extra fields for log lines (e.g. run_id)
+     */
+    private function sendWebhook(array $payload, array $logContext = []): string
+    {
+        $url = config('services.n8n.webhook_url');
+
+        Log::info('n8n webhook payload prepared.', array_merge($logContext, [
+            'url' => $url ?: '(not configured)',
+            'company_email' => $payload['company_email'] ?? null,
+            'job_title' => $payload['job_title'] ?? null,
+            'email_title' => $payload['email_title'] ?? null,
+            'email_message' => $payload['email_message'] ?? null,
+            'job_description_chars' => strlen((string) ($payload['job_description'] ?? '')),
+            'pdf_base64_bytes' => strlen((string) ($payload['resume_pdf_base64'] ?? '')),
+        ]));
+
+        if (empty($url)) {
+            Log::info('n8n webhook not sent: N8N_WEBHOOK_URL is not configured.', $logContext);
+
+            return 'N8N_WEBHOOK_URL is not configured — payload was logged but not sent.';
+        }
+
+        $response = Http::post($url, $payload);
+
+        if ($response->successful()) {
+            Log::info('n8n webhook delivered.', array_merge($logContext, ['status' => $response->status()]));
+
+            return "Webhook delivered (HTTP {$response->status()}).";
+        }
+
+        Log::warning('n8n webhook returned a non-success status.', array_merge($logContext, ['status' => $response->status()]));
+
+        return "Webhook returned HTTP {$response->status()}.";
+    }
+
+    /**
+     * Send a dummy payload to n8n to verify the integration without calling
+     * Gemini or generating a real PDF. Fired from a button on the form.
+     */
+    public function testWebhook()
+    {
+        // A minimal, valid 1-page empty PDF so n8n receives a real base64 blob.
+        $dummyPdf = "%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n"
+            ."2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj\n"
+            ."3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]>>endobj\n"
+            ."xref\n0 4\n0000000000 65535 f \ntrailer<</Root 1 0 R/Size 4>>\n%%EOF";
+
+        $payload = [
+            'company_email' => 'test@example.com',
+            'job_title' => 'Test Job Title',
+            'job_description' => 'This is a dummy job description used to test the n8n webhook payload.',
+            'email_title' => 'Test Email Title — Full-Stack Engineer',
+            'email_message' => 'Hi, this is a test message to verify the webhook payload reaches n8n correctly.',
+            'resume_pdf_base64' => base64_encode($dummyPdf),
+        ];
+
+        try {
+            $result = $this->sendWebhook($payload, ['test' => true]);
+
+            return back()->with('status', "Test webhook: {$result}");
+        } catch (\Throwable $e) {
+            Log::warning('Test webhook failed.', ['error' => $e->getMessage()]);
+
+            return back()->with('error', "Test webhook failed: {$e->getMessage()}");
         }
     }
 
