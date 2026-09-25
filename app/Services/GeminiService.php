@@ -16,6 +16,7 @@ class GeminiService
     public function __construct(
         private readonly ResumeTailorPrompt $prompt,
         private readonly ConstantSkills $constants,
+        private readonly GeminiUsage $usage,
     ) {}
 
     public function tailor(string $jobDescription, ?string $jobTitle = null, ?string $companyName = null): TailoredContent
@@ -54,7 +55,28 @@ class GeminiService
             return null;
         }
 
-        return $res->json();
+        $json = $res->json();
+
+        // Record real token usage from the response's usageMetadata.
+        $this->recordUsage($json);
+
+        return $json;
+    }
+
+    /** Read usageMetadata from a Gemini response and record the real tokens. */
+    private function recordUsage(?array $json): void
+    {
+        $meta = $json['usageMetadata'] ?? null;
+        if (! is_array($meta)) {
+            return;
+        }
+
+        $prompt = (int) ($meta['promptTokenCount'] ?? 0);
+        $total = (int) ($meta['totalTokenCount'] ?? 0);
+        // Output = candidates + any "thoughts" tokens the model reports.
+        $output = (int) ($meta['candidatesTokenCount'] ?? 0) + (int) ($meta['thoughtsTokenCount'] ?? 0);
+
+        $this->usage->record($prompt, $output, $total);
     }
 
     /**

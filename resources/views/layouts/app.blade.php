@@ -14,6 +14,24 @@
                 Resume Tailor
             </a>
             <div class="flex items-center gap-1 text-sm">
+                {{-- Gemini token usage. Real tokens from the API's usageMetadata. --}}
+                <div data-gemini-usage data-usage-url="{{ route('gemini.usage') }}"
+                     title="Gemini tokens used today / lifetime (from the API usageMetadata)."
+                     class="mr-1 hidden items-center gap-1.5 rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs text-slate-600 sm:inline-flex">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3.5 w-3.5 text-indigo-500">
+                        <path fill-rule="evenodd" d="M11.3 1.046a1 1 0 0 1 .7 1.19L10.72 8H15a1 1 0 0 1 .82 1.573l-6 8.5A1 1 0 0 1 8 17.5l1.28-5.5H5a1 1 0 0 1-.82-1.573l6-8.5a1 1 0 0 1 1.12-.381Z" clip-rule="evenodd" />
+                    </svg>
+                    <span>
+                        <span data-usage-today>{{ number_format($geminiUsage['today']['total']) }}</span> tokens today
+                        <span class="text-slate-400">(<span data-usage-lifetime>{{ number_format($geminiUsage['lifetime']['total']) }}</span> total)</span>
+                    </span>
+                    <button type="button" data-usage-refresh title="Refresh usage"
+                            class="grid h-4 w-4 place-items-center rounded text-slate-400 transition hover:bg-slate-200 hover:text-slate-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3.5 w-3.5" data-usage-refresh-icon>
+                            <path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 0 1-9.201 2.466l-.312-.311h1.633a.75.75 0 0 0 0-1.5H3.989a.75.75 0 0 0-.75.75v3.181a.75.75 0 0 0 1.5 0v-1.284l.29.288a7 7 0 0 0 11.712-3.138.75.75 0 0 0-1.449-.39Zm1.23-3.723a.75.75 0 0 0 .219-.53V3.989a.75.75 0 0 0-1.5 0v1.29l-.29-.294A7 7 0 0 0 3.26 8.223a.75.75 0 1 0 1.449.39 5.5 5.5 0 0 1 9.201-2.466l.312.311H12.59a.75.75 0 0 0 0 1.5h3.181a.75.75 0 0 0 .53-.219Z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
                 <a href="{{ route('tailor.create') }}"
                    class="rounded-md px-3 py-1.5 font-medium transition hover:bg-slate-100 {{ request()->routeIs('tailor.create') ? 'bg-slate-100 text-slate-900' : 'text-slate-600' }}">
                     Tailor

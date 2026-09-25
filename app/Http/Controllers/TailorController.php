@@ -222,6 +222,12 @@ class TailorController extends Controller
         return view('tailor.result', compact('run'));
     }
 
+    // Current Gemini usage as JSON (for the navbar refresh button).
+    public function geminiUsage(\App\Services\GeminiUsage $usage)
+    {
+        return response()->json($usage->snapshot());
+    }
+
     // Regenerate the PDF for a run using a trimmed set of skills (skills-only
     // edit). Overwrites the same run's stored PDF. Headline/summary unchanged.
     public function update(TailoringRun $run, UpdateSkillsRequest $request, ResumeAssembler $assembler, PdfGenerator $pdf)

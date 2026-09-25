@@ -46,7 +46,40 @@ function initSkillEditor() {
     });
 }
 
+// Navbar: refresh the Gemini daily-usage counter without a full page reload.
+function initGeminiUsage() {
+    const widget = document.querySelector('[data-gemini-usage]');
+    if (!widget) return;
+
+    const url = widget.dataset.usageUrl;
+    const todayEl = widget.querySelector('[data-usage-today]');
+    const lifetimeEl = widget.querySelector('[data-usage-lifetime]');
+    const refreshBtn = widget.querySelector('[data-usage-refresh]');
+    const icon = widget.querySelector('[data-usage-refresh-icon]');
+
+    const fmt = (n) => Number(n || 0).toLocaleString();
+
+    const refresh = async () => {
+        if (!url) return;
+        icon?.classList.add('animate-spin');
+        try {
+            const res = await fetch(url, { headers: { Accept: 'application/json' } });
+            if (!res.ok) return;
+            const data = await res.json();
+            if (todayEl) todayEl.textContent = fmt(data.today?.total);
+            if (lifetimeEl) lifetimeEl.textContent = fmt(data.lifetime?.total);
+        } catch {
+            // Non-fatal: leave the last-known values in place.
+        } finally {
+            icon?.classList.remove('animate-spin');
+        }
+    };
+
+    refreshBtn?.addEventListener('click', refresh);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     initPreviewModal();
     initSkillEditor();
+    initGeminiUsage();
 });

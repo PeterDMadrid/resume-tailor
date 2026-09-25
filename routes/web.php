@@ -18,6 +18,9 @@ Route::patch('/tailor/result/{run}/skills', [TailorController::class, 'update'])
 // Preview the resume template from config only (no AI) — streamed inline.
 Route::get('/tailor/preview', [TailorController::class, 'preview'])->name('tailor.preview');
 
+// Current Gemini daily usage as JSON (navbar widget refresh).
+Route::get('/gemini/usage', [TailorController::class, 'geminiUsage'])->name('gemini.usage');
+
 // History + re-download.
 Route::get('/tailor/history', [TailorController::class, 'index'])->name('tailor.index');
 Route::get('/tailor/history/{run}/download', [TailorController::class, 'download'])->name('tailor.download');
