@@ -125,4 +125,10 @@ return [
         .'Experience across accounting systems, LMS platforms, and enterprise data migration. '
         .'Skilled in application architecture, database design, and Linux server deployment.',
 
+    // Fallback email fields (used when AI is unavailable). Sent with the webhook.
+    'default_email_title' => 'Full-Stack Software Engineer (Laravel & Vue.js)',
+    'default_email_message' => 'Hi, I came across your opening and believe my full-stack '
+        .'experience with Laravel and Vue.js is a strong fit. My tailored resume is attached '
+        .'for your review. I would welcome the chance to discuss the role.',
+
 ];

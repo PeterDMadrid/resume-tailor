@@ -85,10 +85,21 @@ class GeminiService
             return $this->rejectAndLog('no valid skills after grouping', $response);
         }
 
+        // Email fields are best-effort: fall back to config defaults if the
+        // model omits them, rather than degrading the whole response.
+        $emailTitle = isset($decoded['email_title']) && is_string($decoded['email_title'])
+            ? trim($decoded['email_title'])
+            : '';
+        $emailMessage = isset($decoded['email_message']) && is_string($decoded['email_message'])
+            ? trim($decoded['email_message'])
+            : '';
+
         return new TailoredContent(
             headline: trim($decoded['headline']),
             summary: trim($decoded['summary']),
             skills: $skills,
+            emailTitle: $emailTitle !== '' ? $emailTitle : config('resume.default_email_title'),
+            emailMessage: $emailMessage !== '' ? $emailMessage : config('resume.default_email_message'),
             raw: json_encode($response),
         );
     }

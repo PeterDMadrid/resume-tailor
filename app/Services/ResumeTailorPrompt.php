@@ -56,11 +56,17 @@ class ResumeTailorPrompt
         return <<<PROMPT
         You tailor a candidate's resume header to a job description.
         {$targetLine}
-        Produce THREE things:
+        Produce FIVE things:
         1. headline: a concise professional headline (max 90 chars) aimed at the role.
         2. summary: 2-3 sentences (max 500 chars) highlighting fit for the role.
         3. skills: an array of objects, each { "name": <skill>, "group": <group> },
            ordered so the most relevant to the job appear first.
+        4. email_title: a short subject line for an outreach email to the company,
+           typically the candidate's professional headline for this role (max 90 chars).
+        5. email_message: a short, direct outreach email body (max 400 chars),
+           e.g. "Hi, I saw you are looking for a ...". 2-3 sentences, warm but
+           concise, referencing fit for the role. No greeting placeholders like
+           [Name] and no signature block.
 
         The candidate's KNOWN SKILLS (include the relevant ones, keep their wording):
         [{$allowed}]
@@ -105,8 +111,10 @@ class ResumeTailorPrompt
                         'required' => ['name', 'group'],
                     ],
                 ],
+                'email_title' => ['type' => 'STRING'],
+                'email_message' => ['type' => 'STRING'],
             ],
-            'required' => ['headline', 'summary', 'skills'],
+            'required' => ['headline', 'summary', 'skills', 'email_title', 'email_message'],
         ];
     }
 }

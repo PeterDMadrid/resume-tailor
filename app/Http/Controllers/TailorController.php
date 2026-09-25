@@ -77,6 +77,8 @@ class TailorController extends Controller
             'company_name' => $data['company_name'] ?? null,
             'job_title' => $data['job_title'] ?? null,
             'company_email' => $data['company_email'] ?? null,
+            'email_title' => $tailored->emailTitle,
+            'email_message' => $tailored->emailMessage,
             'generated_headline' => $tailored->headline,
             'generated_summary' => $tailored->summary,
             'generated_skills' => $tailored->skills,
@@ -122,6 +124,8 @@ class TailorController extends Controller
                 'company_email' => $run->company_email,
                 'job_title' => $run->job_title,
                 'job_description' => $run->job_description,
+                'email_title' => $run->email_title,
+                'email_message' => $run->email_message,
                 'resume_pdf_base64' => $pdfBase64,
             ];
 
@@ -134,6 +138,8 @@ class TailorController extends Controller
                 'url' => $url ?: '(not configured)',
                 'company_email' => $run->company_email,
                 'job_title' => $run->job_title,
+                'email_title' => $run->email_title,
+                'email_message' => $run->email_message,
                 'job_description_chars' => strlen((string) $run->job_description),
                 'pdf_base64_bytes' => strlen($pdfBase64), // the blob itself is not logged
             ]);
