@@ -50,11 +50,11 @@
         .name { font-size: 22px; font-weight: bold; margin: 0 0 2px; }
         .headline { font-size: 12px; color: #444; margin: 0 0 6px; }
         .contact { font-size: 9.5px; color: #333; }
-        .contact span { white-space: nowrap; }
-        .contact .sep { color: #aaa; padding: 0 4px; }
+        .contact-row { margin-bottom: 1pt; }
+        .contact .sep { color: #aaa; padding: 0 5px; }
 
         /* Section */
-        .section { margin-top: 10pt; }
+        .section { margin-top: 6pt; }
         .section-title {
             font-size: 11px;
             font-weight: bold;
@@ -69,8 +69,10 @@
         p { margin: 0 0 4px; }
 
         /* Experience */
-        .job { margin-top: 11pt; page-break-inside: avoid; }
-        .job:first-child { margin-top: 0; }
+        .job { margin-top: 7pt; page-break-inside: avoid; }
+        /* First job sits right under the section rule (section-title is the
+           actual first child, so :first-child never matched). */
+        .section-title + .job { margin-top: 0; }
         .job-head { width: 100%; }
         .job-title { font-weight: bold; font-size: 10.5px; }
         .job-company { color: #333; }
@@ -82,7 +84,7 @@
         /* Skills (grouped, aligned two-column table) */
         .skills-table { width: 100%; border-collapse: collapse; line-height: 1.3; }
         .skills-table td { vertical-align: top; padding: 0 0 1pt; }
-        .skill-label { width: 95pt; font-weight: bold; padding-right: 6pt; }
+        .skill-label { width: 130pt; font-weight: bold; padding-right: 10pt; white-space: nowrap; }
 
         /* Education / certs */
         .edu-item { margin-bottom: 5px; }
@@ -98,16 +100,27 @@
     {{-- Header --}}
     <div class="name">{{ $personal['name'] }}</div>
     <div class="headline">{{ $headline }}</div>
+    @php
+        // Build each contact row as whole items joined by a separator placed
+        // only *between* items — avoids a dangling "|" at a wrap point.
+        $primary = array_values(array_filter([
+            $personal['location'] ?? null,
+            $personal['email'] ?? null,
+            $personal['phone'] ?? null,
+        ]));
+        $linkItems = [];
+        foreach ($personal['links'] ?? [] as $label => $url) {
+            $linkItems[] = $label.': '.preg_replace('#^https?://#', '', $url);
+        }
+        $sep = '<span class="sep">|</span>';
+    @endphp
     <div class="contact">
-        <span>{{ $personal['location'] }}</span>
-        <span class="sep">|</span>
-        <span>{{ $personal['email'] }}</span>
-        <span class="sep">|</span>
-        <span>{{ $personal['phone'] }}</span>
-        @foreach ($personal['links'] ?? [] as $label => $url)
-            <span class="sep">|</span>
-            <span>{{ $label }}: {{ preg_replace('#^https?://#', '', $url) }}</span>
-        @endforeach
+        @if ($primary)
+            <div class="contact-row">{!! implode($sep, array_map('e', $primary)) !!}</div>
+        @endif
+        @if ($linkItems)
+            <div class="contact-row">{!! implode($sep, array_map('e', $linkItems)) !!}</div>
+        @endif
     </div>
 
     {{-- Summary --}}
