@@ -54,7 +54,7 @@
         .contact .sep { color: #aaa; padding: 0 5px; }
 
         /* Section */
-        .section { margin-top: 6pt; }
+        .section { margin-top: 3pt; }
         .section-title {
             font-size: 11px;
             font-weight: bold;
@@ -69,7 +69,7 @@
         p { margin: 0 0 4px; }
 
         /* Experience */
-        .job { margin-top: 7pt; page-break-inside: avoid; }
+        .job { margin-top: 4pt; page-break-inside: avoid; }
         /* First job sits right under the section rule (section-title is the
            actual first child, so :first-child never matched). */
         .section-title + .job { margin-top: 0; }
@@ -110,7 +110,7 @@
         ]));
         $linkItems = [];
         foreach ($personal['links'] ?? [] as $label => $url) {
-            $linkItems[] = $label.': '.preg_replace('#^https?://#', '', $url);
+            $linkItems[] = preg_replace('#^https?://#', '', $url);
         }
         $sep = '<span class="sep">|</span>';
     @endphp
