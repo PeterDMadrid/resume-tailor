@@ -60,8 +60,8 @@
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: #1f3a5f;
-            border-bottom: 0.75pt solid #1f3a5f;
+            color: #000;
+            border-bottom: 0.75pt solid #000;
             padding-bottom: 3pt;
             margin-bottom: 5pt;
         }
