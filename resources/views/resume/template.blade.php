@@ -3,14 +3,43 @@
 <head>
     <meta charset="utf-8">
     <title>{{ $personal['name'] }} — Resume</title>
-    {{-- Inline styles only: dompdf is most reliable this way. Single-column, DejaVu Sans. --}}
+    {{-- Inline styles only: dompdf is most reliable this way. Single-column, Inter. --}}
+    @php
+        // Absolute file:// URIs so dompdf resolves the embedded fonts regardless of CWD.
+        $fontUri = static fn (string $file) => 'file://'.str_replace('\\', '/', resource_path('fonts/'.$file));
+    @endphp
     <style>
+        @font-face {
+            font-family: "Inter";
+            font-weight: normal;
+            font-style: normal;
+            src: url("{{ $fontUri('Inter-Regular.ttf') }}") format("truetype");
+        }
+        @font-face {
+            font-family: "Inter";
+            font-weight: bold;
+            font-style: normal;
+            src: url("{{ $fontUri('Inter-Bold.ttf') }}") format("truetype");
+        }
+        @font-face {
+            font-family: "Inter";
+            font-weight: normal;
+            font-style: italic;
+            src: url("{{ $fontUri('Inter-Italic.ttf') }}") format("truetype");
+        }
+        @font-face {
+            font-family: "Inter";
+            font-weight: bold;
+            font-style: italic;
+            src: url("{{ $fontUri('Inter-BoldItalic.ttf') }}") format("truetype");
+        }
+
         @page { margin: 32px 40px; }
 
         * { box-sizing: border-box; }
 
         body {
-            font-family: "DejaVu Sans", sans-serif;
+            font-family: "Inter", sans-serif;
             font-size: 10.5px;
             line-height: 1.4;
             color: #1a1a1a;
@@ -57,7 +86,6 @@
         /* Education / certs */
         .edu-item { margin-bottom: 5px; }
         .edu-degree { font-weight: bold; }
-        .edu-meta { color: #666; font-size: 9.5px; }
         .cert-line { margin: 0; }
         .cert-line .sep { color: #aaa; padding: 0 5px; }
 
@@ -132,8 +160,9 @@
             <div class="section-title">Education</div>
             @foreach ($education as $edu)
                 <div class="edu-item">
+                    <span class="job-meta job-meta-right">{{ $edu['dates'] }}</span>
                     <span class="edu-degree">{{ $edu['degree'] }}</span> — {{ $edu['institution'] }}
-                    <span class="edu-meta">({{ $edu['dates'] }})</span>
+                    <div class="clear"></div>
                 </div>
             @endforeach
         </div>
