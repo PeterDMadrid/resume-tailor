@@ -44,13 +44,15 @@ return [
     'experience' => [
         [
             'title' => 'Freelance Software Developer',
-            'company' => 'Axiom Systems (Freelance / B2B SaaS)',
+            'company' => 'Axiom Systems & Margallo Review Center',
             'location' => 'Quezon City',
             'date_range' => 'June 2026 - Present',
             'current' => true,
             'bullets' => [
-                'Replaced fragmented manual processes at Margallo Review Center with single LMS covering enrollment, learning, payment verification, and administration; staff now manage students and courses from one platform.',
-                'Delivered B2B SaaS e-commerce platform for 20+ sellers with storefronts, product management, checkout, payments, and order handling; sellers launch and run online stores without technical setup.',
+                'Axiom Systems: Delivered B2B SaaS e-commerce platform for 20+ sellers with storefronts, product management, checkout, payments, and order handling; sellers launch and run online stores without technical setup.',
+                'Axiom Systems: Built multi-seller architecture on Laravel, Vue 3, and MySQL with payment gateway and webhook integration, keeping orders and payment status in sync automatically.',
+                'Margallo Review Center: Replaced fragmented manual processes with single LMS covering enrollment, learning, payment verification, and administration; staff now manage students and courses from one platform.',
+                'Margallo Review Center: Built with Laravel, Vue 3, and MySQL: role-based access for admins, staff, and students, plus payment verification workflow that removes manual cross-checking.',
             ],
         ],
         [
@@ -67,7 +69,7 @@ return [
                 'Standardized reusable architecture across 10+ concurrent projects; reduced duplicated code and sped up feature delivery.',
                 'Migrated data between mismatched schemas for 5+ deployments with full traceability and zero data loss.',
                 'Owned production deployments to Linux servers via SSH; diagnosed and fixed live issues to keep client accounting operations running.',
-                'Accelerated code review and documentation with AI-assisted tools (Claude, Cursor), improving code consistency across projects.',
+                'Integrated AI-assisted workflow (Claude, Kiro) into daily development: drafted feature specs, reviewed code for bugs and edge cases, and generated documentation, shortening delivery cycles on client projects.',
                 'Documented modules and deployment steps so teammates could maintain and extend client systems without handover delays.',
             ],
         ],
