@@ -40,7 +40,8 @@
         p { margin: 0 0 4px; }
 
         /* Experience */
-        .job { margin-bottom: 4px; page-break-inside: avoid; }
+        .job { margin-bottom: 11px; page-break-inside: avoid; }
+        .job:last-child { margin-bottom: 0; }
         .job-head { width: 100%; }
         .job-title { font-weight: bold; font-size: 10.5px; }
         .job-company { color: #333; }
@@ -57,7 +58,8 @@
         .edu-item { margin-bottom: 5px; }
         .edu-degree { font-weight: bold; }
         .edu-meta { color: #666; font-size: 9.5px; }
-        .cert-list { margin: 0; padding-left: 16px; }
+        .cert-line { margin: 0; }
+        .cert-line .sep { color: #aaa; padding: 0 5px; }
 
         .clear { clear: both; }
     </style>
@@ -107,13 +109,11 @@
             @foreach ($experience as $job)
                 <div class="job">
                     <div class="job-head">
-                        <span class="job-meta job-meta-right">{{ $job['date_range'] }}</span>
+                        <span class="job-meta job-meta-right">{{ trim($job['date_range'] . (!empty($job['location']) ? ' · ' . $job['location'] : '')) }}</span>
                         <span class="job-title">{{ $job['title'] }}</span>,
                         <span class="job-company">{{ $job['company'] }}</span>
                     </div>
-                    <div class="job-meta clear">
-                        {{ $job['location'] ?? '' }}@if (!empty($job['current'])) &middot; Current @endif
-                    </div>
+                    <div class="clear"></div>
                     @if (!empty($job['bullets']))
                         <ul>
                             @foreach ($job['bullets'] as $bullet)
@@ -143,11 +143,7 @@
     @if (!empty($certifications))
         <div class="section">
             <div class="section-title">Certifications</div>
-            <ul class="cert-list">
-                @foreach ($certifications as $cert)
-                    <li>{{ $cert }}</li>
-                @endforeach
-            </ul>
+            <p class="cert-line">{!! implode('<span class="sep">·</span>', array_map('e', $certifications)) !!}</p>
         </div>
     @endif
 
