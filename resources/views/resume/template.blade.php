@@ -34,14 +34,14 @@
             src: url("{{ $fontUri('Inter-BoldItalic.ttf') }}") format("truetype");
         }
 
-        @page { margin: 32px 40px; }
+        @page { margin: 36pt 36pt; }
 
         * { box-sizing: border-box; }
 
         body {
             font-family: "Inter", sans-serif;
             font-size: 10.5px;
-            line-height: 1.4;
+            line-height: 1.3;
             color: #1a1a1a;
             margin: 0;
         }
@@ -54,34 +54,35 @@
         .contact .sep { color: #aaa; padding: 0 4px; }
 
         /* Section */
-        .section { margin-top: 8px; }
+        .section { margin-top: 10pt; }
         .section-title {
             font-size: 11px;
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: #2a2a2a;
-            border-bottom: 1px solid #999;
-            padding-bottom: 2px;
-            margin-bottom: 6px;
+            color: #1f3a5f;
+            border-bottom: 0.75pt solid #1f3a5f;
+            padding-bottom: 3pt;
+            margin-bottom: 5pt;
         }
 
         p { margin: 0 0 4px; }
 
         /* Experience */
-        .job { margin-bottom: 11px; page-break-inside: avoid; }
-        .job:last-child { margin-bottom: 0; }
+        .job { margin-top: 11pt; page-break-inside: avoid; }
+        .job:first-child { margin-top: 0; }
         .job-head { width: 100%; }
         .job-title { font-weight: bold; font-size: 10.5px; }
         .job-company { color: #333; }
         .job-meta { color: #666; font-size: 9.5px; font-style: italic; }
         .job-meta-right { float: right; font-style: normal; }
-        ul { margin: 3px 0 0; padding-left: 16px; }
-        li { margin-bottom: 2px; }
+        ul { margin: 3pt 0 0; padding-left: 16px; }
+        li { line-height: 1.3; margin-bottom: 2.5pt; }
 
-        /* Skills (grouped) */
-        .skill-row { margin-bottom: 1px; }
-        .skill-group { font-weight: bold; }
+        /* Skills (grouped, aligned two-column table) */
+        .skills-table { width: 100%; border-collapse: collapse; line-height: 1.3; }
+        .skills-table td { vertical-align: top; padding: 0 0 1pt; }
+        .skill-label { width: 95pt; font-weight: bold; padding-right: 6pt; }
 
         /* Education / certs */
         .edu-item { margin-bottom: 5px; }
@@ -121,12 +122,14 @@
     @if (!empty($skills))
         <div class="section">
             <div class="section-title">Skills</div>
-            @foreach ($skills as $group => $items)
-                <div class="skill-row">
-                    <span class="skill-group">{{ $group }}:</span>
-                    {{ implode(', ', $items) }}
-                </div>
-            @endforeach
+            <table class="skills-table">
+                @foreach ($skills as $group => $items)
+                    <tr>
+                        <td class="skill-label">{{ $group }}</td>
+                        <td>{{ implode(', ', $items) }}</td>
+                    </tr>
+                @endforeach
+            </table>
         </div>
     @endif
 
