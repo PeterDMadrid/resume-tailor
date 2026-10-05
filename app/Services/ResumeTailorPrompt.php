@@ -74,7 +74,11 @@ class ResumeTailorPrompt
              from the JD.
            - Paragraph 2: 1-2 sentences on why THIS candidate fits, grounded in the
              candidate's known skills and the JD's needs. Be specific, not generic.
-           - Paragraph 3: a short, confident call to connect.
+           - Paragraph 3: a short, confident call to connect. Do NOT propose or
+             imply any schedule, date, day, or timeframe (never say things like
+             "next week", "available for a call", or "a brief conversation").
+             Simply express openness to discussing the role further and leave
+             the timing entirely to the reader.
            - Sign-off: "Best regards,<br>{$candidateName}"
            Example shape (content must be tailored, keep this layout):
            "Hi,<br><br>You are looking for ...<br><br>I bring ...<br><br>I look forward ...<br><br>Best regards,<br>{$candidateName}"
