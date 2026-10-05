@@ -49,10 +49,8 @@ return [
             'date_range' => 'June 2026 - Present',
             'current' => true,
             'bullets' => [
-                'Axiom Systems: Delivered B2B SaaS e-commerce platform for 20+ sellers with storefronts, product management, checkout, payments, and order handling; sellers launch and run online stores without technical setup.',
-                'Axiom Systems: Built multi-seller architecture on Laravel, Vue 3, and MySQL with payment gateway and webhook integration, keeping orders and payment status in sync automatically.',
-                'Margallo Review Center: Replaced fragmented manual processes with single LMS covering enrollment, learning, payment verification, and administration; staff now manage students and courses from one platform.',
-                'Margallo Review Center: Built with Laravel, Vue 3, and MySQL: role-based access for admins, staff, and students, plus payment verification workflow that removes manual cross-checking.',
+                'Axiom Systems: Delivered a multi-seller B2B SaaS e-commerce platform for 20+ sellers using Laravel, Vue 3, and MySQL, with storefronts, product management, checkout, payments, order handling, and automated payment synchronization through gateway webhooks.',
+                'Margallo Review Center: Replaced fragmented manual processes with a Laravel/Vue 3/MySQL LMS covering enrollment, learning, payment verification, and administration, with role-based access for admins, staff, and students and a centralized payment approval workflow.',
             ],
         ],
         [
