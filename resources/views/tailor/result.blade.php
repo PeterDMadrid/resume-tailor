@@ -7,7 +7,7 @@
         <div>
             <h1 class="text-2xl font-semibold text-slate-900">Your resume is ready</h1>
             <p class="mt-1 text-sm text-slate-500">
-                Tailored {{ $run->created_at->diffForHumans() }}
+                {{ $run->status === 'default' ? 'Default resume sent' : 'Tailored' }} {{ $run->created_at->diffForHumans() }}
                 @if ($run->job_title) for <span class="font-medium text-slate-700">{{ $run->job_title }}</span> @endif
                 @if ($run->company_name) at <span class="font-medium text-slate-700">{{ $run->company_name }}</span> @endif
             </p>

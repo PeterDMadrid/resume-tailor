@@ -11,6 +11,10 @@ Route::get('/tailor', [TailorController::class, 'create'])->name('tailor.create'
 Route::post('/tailor', [TailorController::class, 'store'])->name('tailor.store');
 Route::get('/tailor/result/{run}', [TailorController::class, 'result'])->name('tailor.result');
 
+// Send the DEFAULT (untailored) resume + default cover letter to a company
+// email. Skips Gemini entirely; only a company email is required.
+Route::post('/tailor/send-default', [TailorController::class, 'sendDefault'])->name('tailor.send-default');
+
 // Send a dummy payload to n8n to verify the webhook (no Gemini call, no PDF).
 Route::post('/tailor/test-webhook', [TailorController::class, 'testWebhook'])->name('tailor.test-webhook');
 Route::patch('/tailor/result/{run}/skills', [TailorController::class, 'update'])->name('tailor.update');

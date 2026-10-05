@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SendDefaultRequest;
 use App\Http\Requests\TailorRequest;
 use App\Http\Requests\UpdateSkillsRequest;
 use App\Models\TailoringRun;
@@ -94,6 +95,46 @@ class TailorController extends Controller
 
         // Land on a result page (download available there + in history).
         return redirect()->route('tailor.result', $run);
+    }
+
+    /**
+     * Send the DEFAULT (untailored) resume plus the default cover letter to a
+     * company email — no job description, no Gemini call. The resume is built
+     * straight from config, and the email title/message use the config
+     * defaults. Records a run (so it shows in history and the result page) and
+     * fires the webhook just like the tailored flow.
+     */
+    public function sendDefault(
+        SendDefaultRequest $request,
+        ResumeAssembler $assembler,
+        PdfGenerator $pdf,
+    ) {
+        $data = $request->validated();
+
+        // Untailored resume: config defaults only (same as the preview).
+        $viewData = $assembler->build();
+        $path = $pdf->store($viewData);
+
+        $run = TailoringRun::create([
+            'job_description' => null,
+            'company_name' => $data['company_name'] ?? null,
+            'job_title' => $data['job_title'] ?? null,
+            'company_email' => $data['company_email'],
+            'email_title' => config('resume.default_email_title'),
+            'email_message' => config('resume.default_email_message'),
+            'generated_headline' => config('resume.default_headline'),
+            'generated_summary' => config('resume.default_summary'),
+            'generated_skills' => $viewData['skills'],
+            'pdf_path' => $path,
+            'model_used' => null, // no AI used
+            'status' => 'default',
+            'raw_response' => null,
+        ]);
+
+        $this->fireCompanyEmailWebhook($run, $pdf);
+
+        return redirect()->route('tailor.result', $run)
+            ->with('status', 'Default resume and cover letter sent to '.$run->company_email.'.');
     }
 
     /**

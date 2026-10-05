@@ -88,6 +88,60 @@
         </div>
     </form>
 
+    {{-- Send the DEFAULT resume + default cover letter — no JD, no AI. --}}
+    <div class="mt-4 flex items-center gap-3">
+        <div class="h-px flex-1 bg-slate-200"></div>
+        <span class="text-xs font-medium uppercase tracking-wide text-slate-400">or</span>
+        <div class="h-px flex-1 bg-slate-200"></div>
+    </div>
+
+    <form method="POST" action="{{ route('tailor.send-default') }}"
+          class="mt-4 space-y-3 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+        @csrf
+        <div>
+            <h2 class="text-base font-semibold text-slate-900">Send my default resume</h2>
+            <p class="mt-0.5 text-sm text-slate-500">
+                No tailoring. Sends your standard resume and default cover letter straight to a company —
+                just enter their email.
+            </p>
+        </div>
+
+        <div>
+            <label for="default_company_email" class="mb-1 block text-sm font-medium text-slate-700">
+                Company email
+            </label>
+            <input type="email" id="default_company_email" name="company_email" value="{{ old('company_email') }}"
+                   placeholder="e.g. jobs@acme.com" required
+                   class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none transition focus:border-slate-900 focus:ring-1 focus:ring-slate-900">
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+                <label for="default_job_title" class="mb-1 block text-sm font-medium text-slate-700">
+                    Target job title <span class="font-normal text-slate-400">(optional)</span>
+                </label>
+                <input type="text" id="default_job_title" name="job_title"
+                       placeholder="e.g. Backend Developer"
+                       class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none transition focus:border-slate-900 focus:ring-1 focus:ring-slate-900">
+            </div>
+            <div>
+                <label for="default_company_name" class="mb-1 block text-sm font-medium text-slate-700">
+                    Company <span class="font-normal text-slate-400">(optional)</span>
+                </label>
+                <input type="text" id="default_company_name" name="company_name"
+                       placeholder="e.g. Acme Inc."
+                       class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm outline-none transition focus:border-slate-900 focus:ring-1 focus:ring-slate-900">
+            </div>
+        </div>
+
+        <div class="flex justify-end">
+            <button type="submit"
+                    class="inline-flex items-center gap-2 rounded-lg border border-slate-900 bg-white px-5 py-2.5 text-sm font-medium text-slate-900 shadow-sm transition hover:bg-slate-900 hover:text-white">
+                Send default resume
+            </button>
+        </div>
+    </form>
+
     {{-- Send a dummy payload to n8n to verify the webhook without calling Gemini. --}}
     <form method="POST" action="{{ route('tailor.test-webhook') }}" class="mt-4 space-y-3 rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-3">
         @csrf
