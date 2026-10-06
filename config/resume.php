@@ -54,7 +54,7 @@ return [
             ],
         ],
         [
-            'title' => 'Junior Web Developer',
+            'title' => 'Software Developer',
             'company' => 'Digimax IT Solutions',
             'location' => 'Quezon City',
             'date_range' => 'Nov 2025 - June 2026',
