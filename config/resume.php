@@ -158,8 +158,8 @@ return [
 
     // Fallback email fields (used when AI is unavailable). Sent with the webhook.
     'default_email_title' => 'Full-Stack Software Engineer (Laravel & Vue.js)',
-    'default_email_message' => 'Hi, I came across your opening and believe my full-stack '
-        . 'experience with Laravel and Vue.js is a strong fit. My tailored resume is attached '
-        . 'for your review. I would welcome the chance to discuss the role.',
+    'default_email_message' => 'Hi, I am a full-stack software engineer experienced in Laravel '
+        . 'and Vue.js, and I would love to contribute to your team. My resume is attached '
+        . 'for your review. I would welcome the chance to discuss any current or future opportunities.',
 
 ];
