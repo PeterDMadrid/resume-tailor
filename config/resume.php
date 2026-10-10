@@ -20,7 +20,7 @@ return [
         'phone' => '+639765296586',
         'location' => 'Quezon City',
         'links' => [
-            'Portfolio' => 'https://peter-azure.vercel.app',
+            'Portfolio' => 'https://petermadrid-portfolio.vercel.app/',
             'LinkedIn' => 'https://www.linkedin.com/in/peter-madrid-99752223b/',
         ],
     ],
